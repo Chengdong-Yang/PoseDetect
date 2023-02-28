@@ -1,7 +1,8 @@
 # ML Kit Vision Quickstart Sample App
 
-## Introduction
 
+## Introduction
+This project is used as a project for nus CEG5003, using MediaPipe+ mlkit
 This ML Kit Quickstart app demonstrates how to use and integrate various vision based ML Kit features into your app.
 
 ## Feature List
