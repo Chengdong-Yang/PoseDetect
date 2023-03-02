@@ -63,6 +63,7 @@ import com.google.mlkit.vision.demo.java.barcodescanner.BarcodeScannerProcessor;
 import com.google.mlkit.vision.demo.java.facedetector.FaceDetectorProcessor;
 import com.google.mlkit.vision.demo.java.labeldetector.LabelDetectorProcessor;
 import com.google.mlkit.vision.demo.java.objectdetector.ObjectDetectorProcessor;
+import com.google.mlkit.vision.demo.java.pacedetector.PaceDetectorProcessor;
 import com.google.mlkit.vision.demo.java.posedetector.PoseDetectorProcessor;
 import com.google.mlkit.vision.demo.java.textdetector.TextRecognitionProcessor;
 import com.google.mlkit.vision.demo.preference.PreferenceUtils;
@@ -96,6 +97,9 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
   private static final String IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Bird)";
   private static final String AUTOML_LABELING = "AutoML Image Labeling";
   private static final String POSE_DETECTION = "Pose Detection";
+  private static final String PACE_DETECTION = "Pace Detection";
+  private static final String ARMANGLE_DETECTION = "Arm angle Detection";
+  private static final String LEGANGLE_DETECTION = "Leg ANGLE Detection";
 
   private static final String STATE_SELECTED_MODEL = "selected_model";
   private static final String STATE_LENS_FACING = "lens_facing";
@@ -155,6 +159,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
     options.add(IMAGE_LABELING_CUSTOM);
     options.add(AUTOML_LABELING);
     options.add(POSE_DETECTION);
+    options.add(PACE_DETECTION);
     // Creating adapter for spinner
     ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
     // Drop down layout style - list view with radio button
@@ -376,6 +381,14 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
               PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
           imageProcessor =
               new PoseDetectorProcessor(this, poseDetectorOptions, shouldShowInFrameLikelihood);
+          break;
+        case PACE_DETECTION:
+          PoseDetectorOptions poseDetectorOptions2 =
+                  PreferenceUtils.getPoseDetectorOptionsForLivePreview(this);
+          boolean shouldShowInFrameLikelihood2 =
+                  PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
+          imageProcessor =
+                  new PaceDetectorProcessor(this, poseDetectorOptions2, shouldShowInFrameLikelihood2);
           break;
         default:
           throw new IllegalStateException("Invalid model name");

@@ -48,6 +48,7 @@ import com.google.mlkit.vision.demo.java.barcodescanner.BarcodeScannerProcessor;
 import com.google.mlkit.vision.demo.java.facedetector.FaceDetectorProcessor;
 import com.google.mlkit.vision.demo.java.labeldetector.LabelDetectorProcessor;
 import com.google.mlkit.vision.demo.java.objectdetector.ObjectDetectorProcessor;
+import com.google.mlkit.vision.demo.java.pacedetector.PaceDetectorProcessor;
 import com.google.mlkit.vision.demo.java.posedetector.PoseDetectorProcessor;
 import com.google.mlkit.vision.demo.java.textdetector.TextRecognitionProcessor;
 import com.google.mlkit.vision.demo.preference.PreferenceUtils;
@@ -78,6 +79,7 @@ public final class LivePreviewActivity extends AppCompatActivity
   private static final String IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Birds)";
   private static final String AUTOML_LABELING = "AutoML Image Labeling";
   private static final String POSE_DETECTION = "Pose Detection";
+  private static final String PACE_DETECTION = "Pace Detection";
 
   private static final String TAG = "LivePreviewActivity";
   private static final int PERMISSION_REQUESTS = 1;
@@ -114,6 +116,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     options.add(IMAGE_LABELING_CUSTOM);
     options.add(AUTOML_LABELING);
     options.add(POSE_DETECTION);
+    options.add(PACE_DETECTION);
     // Creating adapter for spinner
     ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
     // Drop down layout style - list view with radio button
@@ -262,6 +265,15 @@ public final class LivePreviewActivity extends AppCompatActivity
           Log.i(TAG, "Using Pose Detector with options " + poseDetectorOptions);
           cameraSource.setMachineLearningFrameProcessor(
               new PoseDetectorProcessor(this, poseDetectorOptions, shouldShowInFrameLikelihood));
+          break;
+        case PACE_DETECTION:
+          PoseDetectorOptions poseDetectorOptions2 =
+                  PreferenceUtils.getPoseDetectorOptionsForLivePreview(this);
+          boolean shouldShowInFrameLikelihood2 =
+                  PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
+          Log.i(TAG, "Using Pose Detector with options " + poseDetectorOptions2);
+          cameraSource.setMachineLearningFrameProcessor(
+                  new PaceDetectorProcessor(this, poseDetectorOptions2, shouldShowInFrameLikelihood2));
           break;
         default:
           Log.e(TAG, "Unknown model: " + model);
