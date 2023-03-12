@@ -58,6 +58,7 @@ import com.google.mlkit.vision.demo.CameraXViewModel;
 import com.google.mlkit.vision.demo.GraphicOverlay;
 import com.google.mlkit.vision.demo.R;
 import com.google.mlkit.vision.demo.VisionImageProcessor;
+import com.google.mlkit.vision.demo.java.armdetector.ArmDetectorProcessor;
 import com.google.mlkit.vision.demo.java.automl.AutoMLImageLabelerProcessor;
 import com.google.mlkit.vision.demo.java.barcodescanner.BarcodeScannerProcessor;
 import com.google.mlkit.vision.demo.java.facedetector.FaceDetectorProcessor;
@@ -160,6 +161,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
     options.add(AUTOML_LABELING);
     options.add(POSE_DETECTION);
     options.add(PACE_DETECTION);
+    options.add(ARMANGLE_DETECTION);
     // Creating adapter for spinner
     ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
     // Drop down layout style - list view with radio button
@@ -389,6 +391,14 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
                   PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
           imageProcessor =
                   new PaceDetectorProcessor(this, poseDetectorOptions2, shouldShowInFrameLikelihood2);
+          break;
+        case ARMANGLE_DETECTION:
+          PoseDetectorOptions poseDetectorOptions3 =
+                  PreferenceUtils.getPoseDetectorOptionsForLivePreview(this);
+          boolean shouldShowInFrameLikelihood3 =
+                  PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
+          imageProcessor =
+                  new ArmDetectorProcessor(this, poseDetectorOptions3, shouldShowInFrameLikelihood3);
           break;
         default:
           throw new IllegalStateException("Invalid model name");
