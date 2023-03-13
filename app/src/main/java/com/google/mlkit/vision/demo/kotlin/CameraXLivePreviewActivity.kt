@@ -393,7 +393,7 @@ class CameraXLivePreviewActivity :
             PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
           val shouldShowInFrameLikelihood3 =
             PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
-          com.google.mlkit.vision.demo.kotlin.pacedetector.PaceDetectorProcessor(this, poseDetectorOptions3, shouldShowInFrameLikelihood3)
+          com.google.mlkit.vision.demo.kotlin.armdetector.ArmDetectorProcessor(this, poseDetectorOptions3, shouldShowInFrameLikelihood3)
         }
         else -> throw IllegalStateException("Invalid model name")
       }

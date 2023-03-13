@@ -28,6 +28,7 @@ import com.google.mlkit.vision.pose.PoseLandmark
 import java.util.Locale
 import kotlin.math.atan2
 import kotlin.math.hypot
+import kotlin.math.roundToInt
 
 /** Draw the detected pose in preview.  */
 class ArmGraphic internal constructor(
@@ -121,23 +122,35 @@ class ArmGraphic internal constructor(
       return result
     }
 
+    //如果右肘为空或者右肩为空或者右手腕为空，提示会说将手机摆正确
+    if (rightElbow == null || rightShoulder == null || rightWrist == null) {
+      lineOneText = "please put your phone correctly"
+    }
+
+    //如果左肘为空或者左肩为空或者左手腕为空，提示会说将手机摆正确
+    if (leftElbow == null || leftShoulder == null || leftWrist == null) {
+      lineTwoText = "please put your phone correctly"
+    }
     if (leftElbow != null && leftShoulder != null && leftWrist != null) {
       angle = getAngle(leftShoulder, leftElbow, leftWrist)
+      angle= (angle * 100).roundToInt() / 100.0
       lineOneText = "left elbow angle："+ angle.toString()
     }
-
     if (rightElbow != null && rightShoulder != null && rightWrist != null) {
       angle = getAngle(rightShoulder, rightElbow, rightWrist)
+      // q:对angle的小数点后两位进行四舍五入
+      angle= (angle * 100).roundToInt() / 100.0
       lineTwoText = "right elbow angle："+ angle.toString()
     }
-
-    if (leftWrist != null && rightWrist != null) {
-      val distance = hypot(1.0*leftWrist.getPosition().x - rightWrist.getPosition().x,
-        1.0*leftWrist.getPosition().y - rightWrist.getPosition().y)
-      if (distance > 200) {
-        Count++
+    //当任意一个手肘角度从90到120度时，再从120到90度时。挥舞次数加一，统计挥舞的次数
+    if (leftElbow != null && leftShoulder != null && leftWrist != null) {
+      if (getAngle(leftShoulder, leftElbow, leftWrist) in 90.0..120.0) {
+        if (getAngle(leftShoulder, leftElbow, leftWrist) in 120.0..90.0) {
+          Count++
+        }
       }
     }
+
 
     drawText(canvas, lineOneText,1)
     drawText(canvas, lineTwoText,2)
