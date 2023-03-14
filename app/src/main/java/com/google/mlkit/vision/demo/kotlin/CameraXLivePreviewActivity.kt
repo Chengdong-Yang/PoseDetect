@@ -54,7 +54,6 @@ import com.google.mlkit.vision.demo.CameraXViewModel
 import com.google.mlkit.vision.demo.GraphicOverlay
 import com.google.mlkit.vision.demo.R
 import com.google.mlkit.vision.demo.VisionImageProcessor
-import com.google.mlkit.vision.demo.java.pacedetector.PaceDetectorProcessor
 import com.google.mlkit.vision.demo.kotlin.automl.AutoMLImageLabelerProcessor
 import com.google.mlkit.vision.demo.kotlin.barcodescanner.BarcodeScannerProcessor
 import com.google.mlkit.vision.demo.kotlin.facedetector.FaceDetectorProcessor
@@ -135,6 +134,7 @@ class CameraXLivePreviewActivity :
 //    options.add(AUTOML_LABELING)
     options.add(POSE_DETECTION)
     options.add(PACE_DETECTION)
+    options.add(ARM_DETECTION)
     // Creating adapter for spinner
     val dataAdapter =
       ArrayAdapter(this, R.layout.spinner_style, options)
@@ -388,6 +388,13 @@ class CameraXLivePreviewActivity :
             PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
          com.google.mlkit.vision.demo.kotlin.pacedetector.PaceDetectorProcessor(this, poseDetectorOptions2, shouldShowInFrameLikelihood2)
         }
+        ARM_DETECTION -> {
+          val poseDetectorOptions3 =
+            PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
+          val shouldShowInFrameLikelihood3 =
+            PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
+          com.google.mlkit.vision.demo.kotlin.armdetector.ArmDetectorProcessor(this, poseDetectorOptions3, shouldShowInFrameLikelihood3)
+        }
         else -> throw IllegalStateException("Invalid model name")
       }
     } catch (e: Exception) {
@@ -519,6 +526,7 @@ class CameraXLivePreviewActivity :
     private const val AUTOML_LABELING = "AutoML Image Labeling"
     private const val POSE_DETECTION = "Pose Detection"
     private const val PACE_DETECTION = "Pace Detection"
+    private const val ARM_DETECTION = "Arm Detection"
     private const val STATE_SELECTED_MODEL = "selected_model"
     private const val STATE_LENS_FACING = "lens_facing"
 
