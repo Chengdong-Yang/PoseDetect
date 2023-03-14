@@ -152,6 +152,10 @@ class PoseGraphic internal constructor(
         lastHeight = currentHeight
       }
     }
+
+    //我想对手臂挥舞的次数进行计数，手腕手肘和肩膀的角度作为hen
+
+
     drawText(canvas, lineOneText,1)
     drawText(canvas, lineTwoText,2)
     drawText(canvas, "count："+upCount.toString(), 3)
