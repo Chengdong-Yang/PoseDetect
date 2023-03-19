@@ -23,10 +23,12 @@ import android.graphics.PointF
 import android.text.TextUtils
 import com.google.mlkit.vision.demo.GraphicOverlay
 import com.google.mlkit.vision.demo.InferenceInfoGraphic
+import com.google.mlkit.vision.demo.kotlin.armdetector.ArmGraphic
 import com.google.mlkit.vision.demo.kotlin.posedetector.PoseGraphic
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.hypot
 
@@ -118,13 +120,26 @@ class PaceGraphic internal constructor(
         if (leftFootDistance > shoulderDistance) {
             // Person is not walking in a straight line
             lineOneText = "please try to walk in a line"
-        } else if (prevDistance != null && distance != null && prevDistance!! > distance) {
-            Count++
-            lineTwoText = "continue walking"
-        } else {
-            lineOneText = "please continue walking"
         }
-        prevDistance = distance
+
+        //if abs(right_elbow.y - right_shoulder.y) < 0.05 and abs(right_wrist.y - right_shoulder.y) < 0.05:将这个代码转换
+        while (abs(rightAnkle!!.position.y - leftAnkle!!.position.y) > 0.1 ) {
+            break;
+        }
+
+        if ((rightAnkle!!.position.y - leftAnkle!!.position.y) > 0.3) {
+            if (isDown == true) {
+                isDown = false
+                isUp = true
+                Count++
+            }
+        } else if ((leftAnkle!!.position.y - rightAnkle!!.position.y) > 0.3) {
+            if (isUp == true) {
+                isUp = false
+                isDown = true
+                Count++
+            }
+        }
 
         drawText(canvas, lineOneText, 1)
         drawText(canvas, lineTwoText, 2)
@@ -215,6 +230,8 @@ class PaceGraphic internal constructor(
         var lineTwoText = ""
         var Count = 0
         var prevDistance: Float? = null
+        var isUp = true //是否起身
+        var isDown = true //是否下蹲
         private const val THRESHOLD_DISTANCE = 0.3f // 30cm
         private fun calculateDistance(p1: PointF, p2: PointF): Float {
             return hypot(p1.x - p2.x, p1.y - p2.y)
