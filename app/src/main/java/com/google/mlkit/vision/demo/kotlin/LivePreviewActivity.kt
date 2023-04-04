@@ -97,6 +97,7 @@ class LivePreviewActivity :
     options.add(POSE_DETECTION)
     options.add(PACE_DETECTION)
     options.add(ARM_DETECTION)
+    options.add(ShOUDLER_DETECTION)
 
     // Creating adapter for spinner
     val dataAdapter =
@@ -380,6 +381,7 @@ class LivePreviewActivity :
     private const val AUTOML_LABELING = "AutoML Image Labeling"
     private const val POSE_DETECTION = "Pose Detection"
     private const val PACE_DETECTION = "Pace Detection"
+    private const val ShOUDLER_DETECTION = "Shoulder Detection"
     private const val ARM_DETECTION = "Arm Detection"
     private const val TAG = "LivePreviewActivity"
     private const val PERMISSION_REQUESTS = 1
