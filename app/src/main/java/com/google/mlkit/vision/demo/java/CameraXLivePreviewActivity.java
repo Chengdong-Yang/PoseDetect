@@ -67,6 +67,7 @@ import com.google.mlkit.vision.demo.java.objectdetector.ObjectDetectorProcessor;
 import com.google.mlkit.vision.demo.java.pacedetector.PaceDetectorProcessor;
 import com.google.mlkit.vision.demo.java.posedetector.PoseDetectorProcessor;
 import com.google.mlkit.vision.demo.java.textdetector.TextRecognitionProcessor;
+import com.google.mlkit.vision.demo.kotlin.shoudlerdetector.ShoulderDetectorProcessor;
 import com.google.mlkit.vision.demo.preference.PreferenceUtils;
 import com.google.mlkit.vision.demo.preference.SettingsActivity;
 import com.google.mlkit.vision.demo.preference.SettingsActivity.LaunchSource;
@@ -101,6 +102,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
   private static final String PACE_DETECTION = "Pace Detection";
   private static final String ARMANGLE_DETECTION = "Arm angle Detection";
   private static final String LEGANGLE_DETECTION = "Leg ANGLE Detection";
+  private static final String SHOUDLER_EXPRESS_DETECTION = "Shoudler Express Detection";
 
   private static final String STATE_SELECTED_MODEL = "selected_model";
   private static final String STATE_LENS_FACING = "lens_facing";
@@ -162,6 +164,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
     options.add(POSE_DETECTION);
     options.add(PACE_DETECTION);
     options.add(ARMANGLE_DETECTION);
+    options.add(SHOUDLER_EXPRESS_DETECTION);
     // Creating adapter for spinner
     ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
     // Drop down layout style - list view with radio button
@@ -399,6 +402,14 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
                   PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
           imageProcessor =
                   new ArmDetectorProcessor(this, poseDetectorOptions3, shouldShowInFrameLikelihood3);
+          break;
+        case SHOUDLER_EXPRESS_DETECTION:
+          PoseDetectorOptions poseDetectorOptions4 =
+                  PreferenceUtils.getPoseDetectorOptionsForLivePreview(this);
+          boolean shouldShowInFrameLikelihood4 =
+                  PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this);
+          imageProcessor =
+                  new ShoulderDetectorProcessor(this, poseDetectorOptions4, shouldShowInFrameLikelihood4);
           break;
         default:
           throw new IllegalStateException("Invalid model name");

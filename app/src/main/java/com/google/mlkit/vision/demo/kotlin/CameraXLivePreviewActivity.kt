@@ -67,6 +67,7 @@ import com.google.mlkit.vision.demo.preference.SettingsActivity.LaunchSource
 import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import java.util.ArrayList
+import com.google.mlkit.vision.demo.java.shoulderdetector.ShoudlerDetectorProcessor
 
 /** Live preview demo app for ML Kit APIs using CameraX.  */
 @KeepName
@@ -135,6 +136,7 @@ class CameraXLivePreviewActivity :
     options.add(POSE_DETECTION)
     options.add(PACE_DETECTION)
     options.add(ARM_DETECTION)
+    options.add(SHOUDLER_DETECTION)
     // Creating adapter for spinner
     val dataAdapter =
       ArrayAdapter(this, R.layout.spinner_style, options)
@@ -395,6 +397,13 @@ class CameraXLivePreviewActivity :
             PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
           com.google.mlkit.vision.demo.kotlin.armdetector.ArmDetectorProcessor(this, poseDetectorOptions3, shouldShowInFrameLikelihood3)
         }
+        SHOUDLER_DETECTION -> {
+          val poseDetectorOptions4 =
+            PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
+          val shouldShowInFrameLikelihood4 =
+            PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
+          com.google.mlkit.vision.demo.kotlin.shoudlerdetector.ShoulderDetectorProcessor(this, poseDetectorOptions4, shouldShowInFrameLikelihood4)
+        }
         else -> throw IllegalStateException("Invalid model name")
       }
     } catch (e: Exception) {
@@ -527,6 +536,7 @@ class CameraXLivePreviewActivity :
     private const val POSE_DETECTION = "Pose Detection"
     private const val PACE_DETECTION = "Pace Detection"
     private const val ARM_DETECTION = "Arm Detection"
+    private const val SHOUDLER_DETECTION = "Shoulder Detection"
     private const val STATE_SELECTED_MODEL = "selected_model"
     private const val STATE_LENS_FACING = "lens_facing"
 

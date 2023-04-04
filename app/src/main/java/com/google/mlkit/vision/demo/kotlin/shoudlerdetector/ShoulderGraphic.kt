@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.mlkit.vision.demo.kotlin.posedetector
+package com.google.mlkit.vision.demo.kotlin.shoudlerdetector
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -29,7 +29,7 @@ import java.util.Locale
 import kotlin.math.atan2
 
 /** Draw the detected pose in preview.  */
-class PoseGraphic internal constructor(
+class ShoulderGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
   private val showInFrameLikelihood: Boolean
@@ -101,57 +101,63 @@ class PoseGraphic internal constructor(
       pose.getPoseLandmark(PoseLandmark.Type.LEFT_FOOT_INDEX)
     val rightFootIndex =
       pose.getPoseLandmark(PoseLandmark.Type.RIGHT_FOOT_INDEX)
+    val rightEar =
+      pose.getPoseLandmark(PoseLandmark.Type.RIGHT_EAR)
+    val leftEar =
+      pose.getPoseLandmark(PoseLandmark.Type.LEFT_EAR)
     /////////////////////
     //Calculate whether the hand exceeds the shoulder
-    val yRightHand = rightWrist!!.position.y - rightShoulder!!.position.y
-    val yLeftHand = leftWrist!!.position.y - leftShoulder!!.position.y
+    val yRightHand = rightWrist!!.position.y - rightEar!!.position.y
+    val yLeftHand = leftWrist!!.position.y - leftEar!!.position.y
+    val wristyDistance = leftWrist.position.y - rightWrist.position.y
     //Calculate whether the distance between the shoulder and the foot is the same width
     val shoulderDistance = leftShoulder!!.position.x - rightShoulder!!.position.x
-    val footDistance = leftAnkle!!.position.x - rightAnkle!!.position.x
-    val ratio = footDistance/shoulderDistance
+    val wristxDistance = leftWrist!!.position.x - rightWrist!!.position.x
+    val ratio = wristxDistance/shoulderDistance
     //angle of point 24-26-28
+    val angle_right_elbow = getAngle(rightWrist, rightElbow, rightShoulder)
+    val angle_left_elbow = getAngle(leftWrist, leftElbow, rightShoulder)
     val angle24_26_28 = getAngle(rightHip, rightKnee, rightAnkle)
 
     if(((180-Math.abs(angle24_26_28)) > 5) && !isCount){
       reInitParams()
       lineOneText = "Please stand up straight"
-    }else if(yLeftHand>0 || yRightHand>0){
+    }else if(wristxDistance < 0 && !isCount) {
       reInitParams()
-      lineOneText = "Please hold your hands behind your head"
-    }else if(ratio<0.5 && isCount==false){
+      lineOneText = "Please put your hands parallel to the ground"
+    }else if(wristyDistance>0&& !isCount){
       reInitParams()
-      lineOneText = "Please spread your feet shoulder-width apart"
-    }else{
-      val currentHeight =  (rightShoulder.position.y + leftShoulder.position.y)/2 //Judging up and down by shoulder height
-
-      if(!isCount){
-        shoulderHeight = currentHeight
-        minSize = (rightAnkle.position.y - rightHip!!.position.y)/5
-        isCount = true
-        lastHeight = currentHeight
-        lineOneText = "Gesture ready"
-      }
-      if(!isDown && (currentHeight - lastHeight)>minSize){//开始下蹲
-        isDown = true
-        isUp = false
-        downCount++
-        lastHeight = currentHeight
-        lineTwoText = "start down"
-      }else if((currentHeight - lastHeight)>minSize){
-        lineTwoText = "downing"
-        lastHeight = currentHeight
-      }
-      if(!isUp && (upCount < downCount) && ( lastHeight - currentHeight ) >minSize ){//开始起身
-        isUp = true
-        isDown = false
-        upCount++
-        lastHeight = currentHeight
-        lineTwoText = "start up"
-      }else if((lastHeight - currentHeight ) >minSize){
-        lineTwoText = "uping"
-        lastHeight = currentHeight
-      }
+      lineOneText = "Please put your hands in a line"}
+    else{
+    val currentHeight =  (rightWrist.position.y + leftWrist.position.y)/2 //Judging up and down by wrist height
+    if(!isCount&&yLeftHand>0&&yRightHand>0){
+      wristHeight = currentHeight
+      minSize = Math.abs(rightElbow!!.position.y - rightWrist!!.position.y)/3
+      isCount = true
+      lastHeight = currentHeight
+      lineOneText = "Gesture ready"
     }
+    if(!isUp && (lastHeight-currentHeight)>0&&yLeftHand<0&&yRightHand<0){//开始上举
+      isUp = true
+      isDown = false
+      upCount++
+      lastHeight = currentHeight
+      lineTwoText = "start up"
+    }else if((lastHeight-currentHeight)>0&&yLeftHand<=0&&yRightHand<=0){
+      lineTwoText = "uping"
+      lastHeight = currentHeight
+    }
+    if(!isDown && (downCount < upCount) && (lastHeight-currentHeight)<0&&yLeftHand>0&&yRightHand>0){//开始起身
+      isDown = true
+      isUp = false
+      downCount++
+      lastHeight = currentHeight
+      lineTwoText = "start up"
+    }else if((currentHeight - lastHeight) >0){
+      lineTwoText = "downing"
+      lastHeight = currentHeight
+    }
+  }
 
     //我想对手臂挥舞的次数进行计数，手腕手肘和肩膀的角度作为hen
 
@@ -189,7 +195,7 @@ class PoseGraphic internal constructor(
   fun reInitParams(){
     lineOneText = ""
     lineTwoText = ""
-    shoulderHeight = 0f
+    wristHeight = 0f
     minSize = 0f
     isCount = false
     isUp = false
@@ -242,7 +248,7 @@ class PoseGraphic internal constructor(
     var isCount = false //is counting
     var lineOneText = ""
     var lineTwoText = ""
-    var shoulderHeight = 0f //
+    var wristHeight = 0f //
     var minSize = 0f //最小移动单位，避免测算抖动出现误差
     var lastHeight = 0f
   }
