@@ -23,6 +23,7 @@ import android.graphics.PointF
 import android.text.TextUtils
 import com.google.mlkit.vision.demo.GraphicOverlay
 import com.google.mlkit.vision.demo.InferenceInfoGraphic
+import com.google.mlkit.vision.demo.java.MyDataHelper
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import java.util.Locale
@@ -165,6 +166,8 @@ class ShoulderGraphic internal constructor(
     drawText(canvas, lineOneText,1)
     drawText(canvas, lineTwoText,2)
     drawText(canvas, "count："+upCount.toString(), 3)
+    //我想将upCount存储到数据库中，但是我不知道如何将其存储到数据库中，请帮助我
+// Draw all the points
     /////////////////////
     drawLine(canvas, leftShoulder!!.position, rightShoulder!!.position, whitePaint)
     drawLine(canvas, leftHip!!.position, rightHip!!.position, whitePaint)

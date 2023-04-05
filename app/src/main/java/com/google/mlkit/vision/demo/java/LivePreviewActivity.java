@@ -425,4 +425,5 @@ public final class LivePreviewActivity extends AppCompatActivity
         Log.i(TAG, "Permission NOT granted: " + permission);
         return false;
     }
+
 }
